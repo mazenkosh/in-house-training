@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="theme-color" content="#28424D">
+    <title>Sign In · In-House Training System</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/main.css">
+    
+    <link rel="icon" type="image/png" href="favicon.png">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <img src="alj-logo-white.png" alt="Abdul Latif Jameel" class="login-logo">
+                <div class="login-title">In-House Training</div>
+                <div class="login-subtitle">Production System · 2026</div>
+            </div>
+            
+            <div class="login-body">
+                <p class="login-prompt">Enter your employee ID to begin</p>
+                
+                <form id="loginForm" autocomplete="off">
+                    <div class="form-group">
+                        <label class="form-label" for="empIdInput">
+                            Employee ID
+                            <span class="required">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            inputmode="numeric"
+                            pattern="[0-9]*"
+                            id="empIdInput"
+                            class="form-input text-mono"
+                            placeholder="e.g. 46615"
+                            required
+                            autofocus
+                        >
+                        <div id="empPreview" class="hidden"></div>
+                        <div id="empError" class="form-error hidden"></div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-block btn-lg" id="continueBtn" disabled>
+                        <span id="continueText">Continue</span>
+                    </button>
+                </form>
+                
+                <p class="text-center text-subtle" style="margin-top: var(--space-6); font-size: 0.78rem;">
+                    Need help? Contact your supervisor.
+                </p>
+            </div>
+        </div>
+        
+        <p class="text-center text-subtle" style="margin-top: var(--space-6); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase;">
+            Abdul Latif Jameel · In-House Training v1.0
+        </p>
+    </div>
+    
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/login.js"></script>
+</body>
+</html>

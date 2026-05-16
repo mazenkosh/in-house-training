@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#28424D">
+    <title>New Training Entry · In-House Training System</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/main.css">
+    
+    <link rel="icon" type="image/png" href="favicon.png">
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="header-inner">
+                <div class="brand">
+                    <img src="alj-logo.png" alt="Abdul Latif Jameel" class="brand-logo">
+                    <div class="brand-divider"></div>
+                    <div class="brand-text">
+                        <div class="brand-title">In-House Training</div>
+                        <div class="brand-subtitle">Daily Entry · 2026</div>
+                    </div>
+                </div>
+                <div class="header-user">
+                    <div class="header-user-info">
+                        <div class="header-user-name" id="userName">—</div>
+                        <div class="header-user-id" id="userId">—</div>
+                    </div>
+                    <button class="btn-logout" id="logoutBtn">Sign Out</button>
+                </div>
+            </div>
+        </header>
+        
+        <main class="main">
+            <h1 class="page-title">New Training Entry</h1>
+            <p class="page-subtitle">Complete all required fields. Computed values are filled automatically.</p>
+            
+            <form id="trainingForm" autocomplete="off" novalidate>
+                
+                <!-- SECTION 1: SESSION INFO -->
+                <div class="card" style="margin-bottom: var(--space-6);">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="card-title-number">1</span>
+                            Session Information
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row-3">
+                            <div class="form-group" style="margin: 0;">
+                                <label class="form-label" for="dateInput">Date <span class="required">*</span></label>
+                                <input type="date" id="dateInput" name="training_date" class="form-input" required>
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label class="form-label" for="plantSelect">Plant <span class="required">*</span></label>
+                                <select id="plantSelect" name="plant" class="form-select" required>
+                                    <option value="">Select Plant…</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label class="form-label" for="lineSelect">Line <span class="required">*</span></label>
+                                <select id="lineSelect" name="line" class="form-select" required disabled>
+                                    <option value="">Select Plant first</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- SECTION 2: PEOPLE -->
+                <div class="card" style="margin-bottom: var(--space-6);">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="card-title-number">2</span>
+                            Trainee & Trainer
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group" style="margin: 0;">
+                                <label class="form-label" for="userIdInput">Trainee ID <span class="required">*</span></label>
+                                <input type="text" inputmode="numeric" pattern="[0-9]*" id="userIdInput" name="user_id" class="form-input text-mono" placeholder="Employee ID" required>
+                                <div id="userInfoPreview" class="hidden"></div>
+                                <input type="hidden" id="empNameInput" name="emp_name">
+                                <input type="hidden" id="supervisorIdInput" name="supervisor_id">
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label class="form-label" for="trainerIdInput">Trainer ID <span class="required">*</span></label>
+                                <input type="text" inputmode="numeric" pattern="[0-9]*" id="trainerIdInput" name="trainer_id" class="form-input text-mono" placeholder="Trainer Employee ID" required>
+                                <div id="trainerPreview" class="hidden"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- SECTION 3: TRAINING DETAILS -->
+                <div class="card" style="margin-bottom: var(--space-6);">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="card-title-number">3</span>
+                            Training Details
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row-3">
+                            <div class="form-group" style="margin: 0;">
+                                <label class="form-label" for="modelSelect">Model <span class="required">*</span></label>
+                                <select id="modelSelect" name="model" class="form-select" required>
+                                    <option value="">Select Model…</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label class="form-label" for="gradeSelect">Grade <span class="required">*</span></label>
+                                <select id="gradeSelect" name="grade" class="form-select" required disabled>
+                                    <option value="">Select Model first</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label class="form-label" for="processSelect">Process <span class="required">*</span></label>
+                                <select id="processSelect" name="process_name" class="form-select" required disabled>
+                                    <option value="">Select Grade first</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row-3" style="margin-top: var(--space-5);">
+                            <div class="form-group" style="margin: 0;">
+                                <label class="form-label">Req. Hours <span class="hint">(auto)</span></label>
+                                <input type="number" id="reqHoursInput" name="req_training_hr" class="form-input is-computed text-mono" readonly placeholder="—">
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label class="form-label">Previous Hours <span class="hint">(auto)</span></label>
+                                <input type="number" id="prevHoursInput" name="previous_training_hours" class="form-input is-computed text-mono" readonly placeholder="—">
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label class="form-label">Remaining <span class="hint">(auto)</span></label>
+                                <input type="text" id="remainingInput" class="form-input is-computed text-mono" readonly placeholder="—">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- SECTION 4: PERFORMANCE -->
+                <div class="card" style="margin-bottom: var(--space-6);">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="card-title-number">4</span>
+                            Performance Metrics
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row-3">
+                            <div class="form-group" style="margin: 0;">
+                                <label class="form-label" for="trainedCarsInput">Trained Cars <span class="required">*</span></label>
+                                <input type="number" id="trainedCarsInput" name="trained_cars" class="form-input text-mono" min="0" step="1" required placeholder="0">
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label class="form-label" for="trainedHoursInput">Trained Hours <span class="required">*</span></label>
+                                <input type="number" id="trainedHoursInput" name="trained_hours" class="form-input text-mono" min="0" step="0.01" required placeholder="0.00">
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label class="form-label" for="learningRateSelect">Learning Rate <span class="required">*</span></label>
+                                <select id="learningRateSelect" name="learning_rate" class="form-select" required>
+                                    <option value="">Select rate…</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- SECTION 5: QUALITY -->
+                <div class="card" style="margin-bottom: var(--space-6);">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="card-title-number">5</span>
+                            Quality Indicators
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row-3">
+                            <div class="form-group" style="margin: 0;">
+                                <label class="form-label" for="needMoreSelect">Need More Training <span class="required">*</span></label>
+                                <select id="needMoreSelect" name="need_more_training" class="form-select" required>
+                                    <option value="">Select…</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label class="form-label" for="fiveSSelect">5S <span class="required">*</span></label>
+                                <select id="fiveSSelect" name="five_s" class="form-select" required>
+                                    <option value="">Select…</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label class="form-label" for="taktSelect">In Takt Time <span class="required">*</span></label>
+                                <select id="taktSelect" name="in_takt_time" class="form-select" required>
+                                    <option value="">Select…</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row" style="margin-top: var(--space-5);">
+                            <div class="form-group" style="margin: 0;">
+                                <label class="form-label" for="qualitySelect">Quality <span class="required">*</span></label>
+                                <select id="qualitySelect" name="quality" class="form-select" required>
+                                    <option value="">Select…</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label class="form-label" for="checkFinishSelect">Check After Finish <span class="required">*</span></label>
+                                <select id="checkFinishSelect" name="check_after_finish" class="form-select" required>
+                                    <option value="">Select…</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- SECTION 6: REMARKS -->
+                <div class="card" style="margin-bottom: var(--space-6);">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="card-title-number">6</span>
+                            Remarks <span style="font-weight: 400; opacity: 0.6; text-transform: none; letter-spacing: 0;">(Optional)</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row-3">
+                            <div class="form-group" style="margin: 0;">
+                                <label class="form-label" for="remark1Select">Remark 1</label>
+                                <select id="remark1Select" name="remark_1" class="form-select">
+                                    <option value="">None</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label class="form-label" for="remark2Select">Remark 2</label>
+                                <select id="remark2Select" name="remark_2" class="form-select">
+                                    <option value="">None</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label class="form-label" for="remark3Select">Remark 3</label>
+                                <select id="remark3Select" name="remark_3" class="form-select">
+                                    <option value="">None</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="resetBtn">Reset Form</button>
+                    <button type="submit" class="btn btn-accent btn-lg" id="submitBtn">
+                        <span id="submitText">Submit Training Record</span>
+                    </button>
+                </div>
+            </form>
+        </main>
+    </div>
+    
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <div class="modal-overlay hidden" id="successModal">
+        <div class="modal">
+            <div class="modal-icon">
+                <div class="modal-icon-circle">✓</div>
+            </div>
+            <div class="modal-body">
+                <h2 class="modal-title">Training Recorded Successfully</h2>
+                <p class="modal-message">The training record has been saved to the system.</p>
+                
+                <div class="modal-details" id="successDetails"></div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="modalCloseBtn">View Form</button>
+                    <button type="button" class="btn btn-primary" id="modalNewBtn">New Entry</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/form.js"></script>
+</body>
+</html>
