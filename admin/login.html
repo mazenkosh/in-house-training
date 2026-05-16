@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="theme-color" content="#28424D">
+    <title>Admin Sign In · In-House Training System</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/main.css">
+    
+    <link rel="icon" type="image/png" href="../favicon.png">
+    
+    <style>
+        .admin-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: 4px 12px;
+            background: rgba(237, 107, 19, 0.15);
+            border: 1px solid rgba(237, 107, 19, 0.3);
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--alj-blaze);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: var(--space-4);
+        }
+    </style>
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-header-top">
+                    <div class="login-pio">
+                        <div class="pio-mark">PIO</div>
+                        <div class="pio-tagline">Port Installed Options</div>
+                    </div>
+                    <img src="../alj-logo-white.png" alt="Abdul Latif Jameel" class="login-logo">
+                </div>
+                <div style="text-align: center; position: relative; z-index: 1;">
+                    <span class="admin-badge" style="background: rgba(237, 107, 19, 0.2); border-color: rgba(237, 107, 19, 0.4); color: #FAD09F;">
+                        <span>🔐</span> Admin Area
+                    </span>
+                </div>
+                <div class="login-title">Manager Sign In</div>
+                <div class="login-subtitle">Approval Dashboard · 2026</div>
+            </div>
+            
+            <div class="login-body">
+                <p class="login-prompt">Sign in with your employee ID and password</p>
+                
+                <form id="adminLoginForm" autocomplete="off">
+                    <div class="form-group">
+                        <label class="form-label" for="empIdInput">
+                            Employee ID
+                            <span class="required">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            inputmode="numeric"
+                            pattern="[0-9]*"
+                            id="empIdInput"
+                            class="form-input text-mono"
+                            placeholder="e.g. 5755"
+                            required
+                            autofocus
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="passwordInput">
+                            Password
+                            <span class="required">*</span>
+                        </label>
+                        <input
+                            type="password"
+                            id="passwordInput"
+                            class="form-input"
+                            placeholder="Enter password"
+                            required
+                        >
+                        <div id="loginError" class="form-error hidden"></div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-block btn-lg" id="signInBtn">
+                        <span id="signInText">Sign In</span>
+                    </button>
+                </form>
+                
+                <div style="margin-top: var(--space-6); padding-top: var(--space-5); border-top: 1px solid var(--color-border); text-align: center;">
+                    <a href="../index.html" style="font-size: 0.85rem; color: var(--alj-teal); text-decoration: none; font-weight: 500;">
+                        ← Back to supervisor form
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <p class="text-center text-subtle" style="margin-top: var(--space-6); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase;">
+            Abdul Latif Jameel · Admin Portal v1.0
+        </p>
+    </div>
+    
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <script src="../js/config.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="js/admin-login.js"></script>
+</body>
+</html>
