@@ -8,7 +8,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&family=Pinyon+Script&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="css/main.css">
     
@@ -265,6 +265,40 @@
                     </div>
                 </div>
                 
+                <!-- SECTION 7: DIGITAL SIGNATURE -->
+                <div class="signature-card" style="margin-bottom: var(--space-6);">
+                    <div class="signature-header">
+                        <div class="signature-title">
+                            <span class="card-title-number" style="background: var(--alj-teal);">7</span>
+                            Authorization
+                        </div>
+                        <span class="signature-badge">
+                            <span style="font-size: 0.85rem;">🔒</span> E-Signed
+                        </span>
+                    </div>
+                    <div class="signature-body">
+                        <div class="signature-row">
+                            <div class="signature-check">
+                                <span>✓</span>
+                            </div>
+                            <div class="signature-info">
+                                <div class="signature-label">Digitally Signed By Supervisor</div>
+                                <div class="signature-name" id="signatureName">Loading…</div>
+                                <div class="signature-meta" id="signatureMeta">—</div>
+                            </div>
+                            <div class="signature-timestamp">
+                                <div class="signature-timestamp-label">Timestamp</div>
+                                <div class="signature-timestamp-date" id="signatureDate">—</div>
+                                <div class="signature-timestamp-time" id="signatureTime">—</div>
+                            </div>
+                        </div>
+                        <div class="signature-disclaimer">
+                            <span class="signature-disclaimer-icon">ⓘ</span>
+                            <span>By submitting this form, you confirm that the training session details above are accurate. This digital signature is legally equivalent to a handwritten signature under the Saudi Electronic Transactions Law.</span>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="form-actions">
                     <button type="button" class="btn btn-secondary" id="resetBtn">Reset Form</button>
                     <button type="submit" class="btn btn-accent btn-lg" id="submitBtn">
@@ -289,7 +323,7 @@
                 <div class="modal-details" id="successDetails"></div>
                 
                 <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" id="modalCloseBtn">View Form</button>
+                    <button type="button" class="btn btn-secondary" id="modalCloseBtn">Close</button>
                     <button type="button" class="btn btn-primary" id="modalNewBtn">New Entry</button>
                 </div>
             </div>

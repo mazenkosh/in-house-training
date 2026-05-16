@@ -107,7 +107,8 @@
             }
             
             // Check login permission (supervisors and managers only)
-            if (employee.can_login !== true) {
+            // If the column doesn't exist yet, employee.can_login will be undefined
+            if (employee.can_login === false) {
                 showError('Access restricted. Only supervisors and workshop managers can sign in. Contact your manager if you need access.');
                 verifiedEmployee = null;
                 return;
@@ -117,7 +118,9 @@
             showPreview(employee);
         } catch (err) {
             console.error('Verification error:', err);
-            showError('Unable to connect to the system. Please check your internet and try again.');
+            // Show the actual error to help diagnose
+            const errMsg = err.message || 'Unknown error';
+            showError('System error: ' + errMsg.substring(0, 200));
         }
     }
     
@@ -178,6 +181,8 @@
                 company: verifiedEmployee.company_name,
                 supervisor_id: verifiedEmployee.supervisor_id,
                 supervisor_name: verifiedEmployee.supervisor_name,
+                job_title: verifiedEmployee.job_title || 'Production Line Supervisor',
+                can_approve: verifiedEmployee.can_approve || false,
                 loginAt: new Date().toISOString()
             };
             

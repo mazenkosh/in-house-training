@@ -48,8 +48,15 @@ const API = {
      * @returns {Object|null} Employee object or null if not found
      */
     async verifyEmployee(empId) {
-        const data = await this._get(`manpower?employee_id=eq.${empId}&is_active=eq.true&select=*`);
-        return data.length > 0 ? data[0] : null;
+        // Try to select all fields - if can_login column doesn't exist yet, fall back gracefully
+        try {
+            const data = await this._get(`manpower?employee_id=eq.${empId}&is_active=eq.true&select=*`);
+            return data.length > 0 ? data[0] : null;
+        } catch (err) {
+            // Re-throw to let caller handle
+            console.error('verifyEmployee failed:', err);
+            throw err;
+        }
     },
 
     /**

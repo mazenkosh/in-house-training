@@ -33,6 +33,37 @@
     document.getElementById('userName').textContent = session.name || '—';
     document.getElementById('userId').textContent = `ID: ${session.empId}`;
     
+    // Populate digital signature with session info
+    function updateSignaturePreview() {
+        const $sigName = document.getElementById('signatureName');
+        const $sigMeta = document.getElementById('signatureMeta');
+        const $sigDate = document.getElementById('signatureDate');
+        const $sigTime = document.getElementById('signatureTime');
+        
+        if ($sigName) {
+            $sigName.textContent = session.name || 'Unknown';
+        }
+        if ($sigMeta) {
+            const role = session.job_title || 'Production Line Supervisor';
+            $sigMeta.textContent = `ID ${session.empId} · ${role} · ${session.location || 'Plant'}`;
+        }
+        
+        // Update time every second
+        function tick() {
+            const now = new Date();
+            const dateStr = now.toISOString().split('T')[0];
+            const timeStr = now.toLocaleTimeString('en-GB', { 
+                hour: '2-digit', minute: '2-digit', second: '2-digit', 
+                hour12: false, timeZone: 'Asia/Riyadh' 
+            });
+            if ($sigDate) $sigDate.textContent = dateStr;
+            if ($sigTime) $sigTime.textContent = timeStr + ' KSA';
+        }
+        tick();
+        setInterval(tick, 1000);
+    }
+    updateSignaturePreview();
+    
     // ========================================================
     // DOM REFERENCES
     // ========================================================
@@ -408,6 +439,7 @@
     // ========================================================
     
     function collectFormData() {
+        const now = new Date().toISOString();
         return {
             training_date: $date.value,
             plant: $plant.value,
@@ -432,7 +464,12 @@
             remark_1: $remark1.value || null,
             remark_2: $remark2.value || null,
             remark_3: $remark3.value || null,
-            submitted_by_emp_id: session.empId
+            submitted_by_emp_id: session.empId,
+            // Digital signature fields
+            signed_by_supervisor_id: session.empId,
+            signed_by_supervisor_name: session.name,
+            signed_at: now,
+            approval_status: 'pending_manager_approval'
         };
     }
     
