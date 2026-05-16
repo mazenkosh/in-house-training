@@ -1,216 +1,140 @@
 // ============================================================
-// LOGIN PAGE — Employee ID verification flow
+// ADMIN LOGIN — Direct password verification (browser SHA-256)
 // ============================================================
 
 (function() {
     'use strict';
     
-    const $form = document.getElementById('loginForm');
-    const $input = document.getElementById('empIdInput');
-    const $preview = document.getElementById('empPreview');
-    const $error = document.getElementById('empError');
-    const $button = document.getElementById('continueBtn');
-    const $btnText = document.getElementById('continueText');
-    
-    let verifiedEmployee = null;
-    let verifyTimer = null;
-    
-    // ========================================================
-    // UTILITIES
-    // ========================================================
+    const $form = document.getElementById('adminLoginForm');
+    const $empId = document.getElementById('empIdInput');
+    const $password = document.getElementById('passwordInput');
+    const $error = document.getElementById('loginError');
+    const $btn = document.getElementById('signInBtn');
+    const $btnText = document.getElementById('signInText');
     
     function showError(msg) {
         $error.textContent = msg;
         $error.classList.remove('hidden');
-        $input.classList.add('is-error');
-        $preview.classList.add('hidden');
-        $button.disabled = true;
+        $empId.classList.add('is-error');
+        $password.classList.add('is-error');
     }
     
     function clearError() {
         $error.classList.add('hidden');
-        $input.classList.remove('is-error');
+        $empId.classList.remove('is-error');
+        $password.classList.remove('is-error');
     }
     
-    function showPreview(employee) {
-        const initials = (employee.name || '?')
-            .split(' ')
-            .slice(0, 2)
-            .map(w => w[0])
-            .join('')
-            .toUpperCase();
-        
-        $preview.innerHTML = `
-            <div class="emp-preview">
-                <div class="emp-preview-icon">${initials}</div>
-                <div class="emp-preview-info">
-                    <div class="emp-preview-name">${escapeHtml(employee.name)}</div>
-                    <div class="emp-preview-meta">${escapeHtml(employee.location || '—')} · ${escapeHtml(employee.company_name || '—')}</div>
-                </div>
-            </div>
-        `;
-        $preview.classList.remove('hidden');
+    async function sha256(str) {
+        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+        return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+    }
+    
+    $empId.addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/\D/g, '');
         clearError();
-        $button.disabled = false;
-    }
-    
-    function hidePreview() {
-        $preview.classList.add('hidden');
-        $button.disabled = true;
-        verifiedEmployee = null;
-    }
-    
-    function escapeHtml(str) {
-        if (!str) return '';
-        return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#039;');
-    }
-    
-    function showToast(title, message, type = 'success') {
-        const $container = document.getElementById('toastContainer');
-        const $toast = document.createElement('div');
-        $toast.className = `toast ${type === 'error' ? 'is-error' : type === 'warning' ? 'is-warning' : ''}`;
-        $toast.innerHTML = `
-            <div class="toast-icon">${type === 'error' ? '⚠' : type === 'warning' ? '⚡' : '✓'}</div>
-            <div class="toast-content">
-                <div class="toast-title">${escapeHtml(title)}</div>
-                <div class="toast-message">${escapeHtml(message)}</div>
-            </div>
-        `;
-        $container.appendChild($toast);
-        setTimeout(() => {
-            $toast.classList.add('is-leaving');
-            setTimeout(() => $toast.remove(), 300);
-        }, 4000);
-    }
-    
-    // ========================================================
-    // VERIFICATION LOGIC
-    // ========================================================
-    
-    async function verifyEmployee(empId) {
-        if (!empId || !/^\d+$/.test(empId)) {
-            hidePreview();
-            return;
-        }
-        
-        try {
-            const employee = await API.verifyEmployee(parseInt(empId, 10));
-            
-            if (!employee) {
-                showError('Employee ID not found. Please check the number and try again.');
-                return;
-            }
-            
-            // Check login permission (supervisors and managers only)
-            // If the column doesn't exist yet, employee.can_login will be undefined
-            if (employee.can_login === false) {
-                showError('Access restricted. Only supervisors and workshop managers can sign in. Contact your manager if you need access.');
-                verifiedEmployee = null;
-                return;
-            }
-            
-            verifiedEmployee = employee;
-            showPreview(employee);
-        } catch (err) {
-            console.error('Verification error:', err);
-            // Show the actual error to help diagnose
-            const errMsg = err.message || 'Unknown error';
-            showError('System error: ' + errMsg.substring(0, 200));
-        }
-    }
-    
-    // ========================================================
-    // EVENT HANDLERS
-    // ========================================================
-    
-    // Real-time verification with debounce
-    $input.addEventListener('input', (e) => {
-        // Allow only digits
-        const val = e.target.value.replace(/\D/g, '');
-        if (val !== e.target.value) {
-            e.target.value = val;
-        }
-        
-        clearError();
-        
-        if (val.length < 3) {
-            hidePreview();
-            return;
-        }
-        
-        // Debounce
-        clearTimeout(verifyTimer);
-        verifyTimer = setTimeout(() => verifyEmployee(val), 500);
     });
     
-    // Form submission
+    $password.addEventListener('input', clearError);
+    
     $form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        if (!verifiedEmployee) {
-            const empId = $input.value.trim();
-            if (empId) {
-                await verifyEmployee(empId);
-            }
+        const empId = parseInt($empId.value, 10);
+        const password = $password.value;
+        
+        if (!empId || !password) {
+            showError('Please enter both Employee ID and password');
             return;
         }
         
-        // Show loading state
-        $button.disabled = true;
+        $btn.disabled = true;
         $btnText.innerHTML = '<span class="spinner"></span> Signing in...';
         
         try {
-            // Log the login event
-            API.logAudit(
-                'LOGIN_SUCCESS',
-                'employee',
-                verifiedEmployee.employee_id,
-                { name: verifiedEmployee.name, location: verifiedEmployee.location }
+            // Step 1: Fetch employee record
+            const res = await fetch(
+                `${CONFIG.SUPABASE_URL}/rest/v1/manpower?employee_id=eq.${empId}&select=employee_id,name,location,job_title,can_approve,password_hash,is_active`,
+                {
+                    headers: {
+                        'apikey': CONFIG.SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
+                    }
+                }
             );
             
-            // Store session in localStorage
+            if (!res.ok) throw new Error(`API Error ${res.status}`);
+            
+            const rows = await res.json();
+            const emp = rows && rows.length > 0 ? rows[0] : null;
+            
+            if (!emp) {
+                showError('Employee ID not found.');
+                return;
+            }
+            if (!emp.is_active) {
+                showError('Account is inactive.');
+                return;
+            }
+            if (!emp.can_approve) {
+                showError('Access denied. Only plant managers can access this area.');
+                return;
+            }
+            if (!emp.password_hash) {
+                showError('Password not configured. Contact system administrator.');
+                return;
+            }
+            
+            // Step 2: Hash the entered password in browser
+            const enteredHash = await sha256(password);
+            
+            if (enteredHash !== emp.password_hash) {
+                showError('Incorrect password. Please try again.');
+                return;
+            }
+            
+            // Step 3: Login successful — save session
             const session = {
-                empId: verifiedEmployee.employee_id,
-                name: verifiedEmployee.name,
-                location: verifiedEmployee.location,
-                company: verifiedEmployee.company_name,
-                supervisor_id: verifiedEmployee.supervisor_id,
-                supervisor_name: verifiedEmployee.supervisor_name,
-                job_title: verifiedEmployee.job_title || 'Production Line Supervisor',
-                can_approve: verifiedEmployee.can_approve || false,
+                empId: emp.employee_id,
+                name: emp.name,
+                location: emp.location,
+                job_title: emp.job_title || 'Plant Manager',
+                can_approve: emp.can_approve,
+                isAdmin: true,
                 loginAt: new Date().toISOString()
             };
             
-            localStorage.setItem('training_session', JSON.stringify(session));
+            localStorage.setItem('admin_session', JSON.stringify(session));
             
-            // Redirect to form
-            window.location.href = 'form.html';
+            // Log audit (best effort)
+            try {
+                await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/audit_log`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': CONFIG.SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({
+                        action: 'ADMIN_LOGIN',
+                        actor_type: 'admin',
+                        actor_id: String(emp.employee_id),
+                        details: { name: emp.name, location: emp.location },
+                        status: 'success'
+                    })
+                });
+            } catch (_) {}
+            
+            // Redirect
+            window.location.href = 'dashboard.html';
             
         } catch (err) {
-            console.error('Login error:', err);
-            showToast('Sign-in failed', 'Please try again', 'error');
-            $button.disabled = false;
-            $btnText.textContent = 'Continue';
+            console.error('Admin login error:', err);
+            showError('Connection error. Please try again.');
+        } finally {
+            $btn.disabled = false;
+            $btnText.textContent = 'Sign In';
         }
     });
-    
-    // Check if already logged in
-    const existingSession = localStorage.getItem('training_session');
-    if (existingSession) {
-        try {
-            const session = JSON.parse(existingSession);
-            // Auto-fill but don't redirect — let user confirm
-            if (session.empId) {
-                $input.value = session.empId;
-                verifyEmployee(String(session.empId));
-            }
-        } catch (e) {
-            localStorage.removeItem('training_session');
-        }
-    }
 })();
