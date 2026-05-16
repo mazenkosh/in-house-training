@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#28424D">
+    <title>Admin Dashboard · In-House Training System</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&family=Pinyon+Script&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    
+    <link rel="icon" type="image/png" href="../favicon.png">
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="header-inner">
+                <div class="brand">
+                    <div class="pio-mark pio-mark-sm">PIO</div>
+                    <div class="brand-text">
+                        <div class="brand-title">Admin Dashboard</div>
+                        <div class="brand-subtitle">Port Installed Options · 2026</div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="header-user">
+                        <div class="header-user-info">
+                            <div class="header-user-name" id="userName">—</div>
+                            <div class="header-user-id" id="userRole">—</div>
+                        </div>
+                        <button class="btn-logout" id="logoutBtn">Sign Out</button>
+                    </div>
+                    <div class="brand-divider"></div>
+                    <img src="../alj-logo-white.png" alt="Abdul Latif Jameel" class="brand-logo">
+                </div>
+            </div>
+        </header>
+        
+        <!-- Dashboard Navigation -->
+        <nav class="dash-nav">
+            <div class="dash-nav-inner">
+                <a href="#overview" class="dash-nav-link active" data-section="overview">
+                    <span>📊</span> Overview
+                </a>
+                <a href="#approvals" class="dash-nav-link" data-section="approvals">
+                    <span>⏳</span> Pending Approvals
+                    <span class="dash-nav-badge" id="pendingCount">0</span>
+                </a>
+                <a href="#records" class="dash-nav-link" data-section="records">
+                    <span>📋</span> All Records
+                </a>
+                <a href="#analytics" class="dash-nav-link" data-section="analytics">
+                    <span>📈</span> Analytics
+                </a>
+                <a href="#export" class="dash-nav-link" data-section="export">
+                    <span>📥</span> Export
+                </a>
+            </div>
+        </nav>
+        
+        <main class="main">
+            
+            <!-- ===== OVERVIEW SECTION ===== -->
+            <section id="section-overview" class="dash-section">
+                <h1 class="page-title">Welcome back, <span id="welcomeName">Manager</span></h1>
+                <p class="page-subtitle">Here's what's happening at your plant today.</p>
+                
+                <!-- KPI Cards -->
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-icon" style="background: #EEF4F6; color: #2A5266;">📋</div>
+                        <div class="kpi-content">
+                            <div class="kpi-label">Total Records</div>
+                            <div class="kpi-value" id="kpiTotal">—</div>
+                            <div class="kpi-trend" id="kpiTotalTrend">—</div>
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card">
+                        <div class="kpi-icon" style="background: #FDF1E6; color: #C45810;">⏳</div>
+                        <div class="kpi-content">
+                            <div class="kpi-label">Pending Approval</div>
+                            <div class="kpi-value" id="kpiPending">—</div>
+                            <div class="kpi-trend">Awaiting your review</div>
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card">
+                        <div class="kpi-icon" style="background: #E6F4F4; color: #069999;">✓</div>
+                        <div class="kpi-content">
+                            <div class="kpi-label">Approved This Month</div>
+                            <div class="kpi-value" id="kpiApproved">—</div>
+                            <div class="kpi-trend" id="kpiApprovedTrend">—</div>
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card">
+                        <div class="kpi-icon" style="background: #EEF4F6; color: #2A5266;">📈</div>
+                        <div class="kpi-content">
+                            <div class="kpi-label">Pass Rate</div>
+                            <div class="kpi-value" id="kpiPassRate">—</div>
+                            <div class="kpi-trend">Last 30 days</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="quick-section">
+                    <h2 class="quick-title">Quick Actions</h2>
+                    <div class="quick-grid">
+                        <button class="quick-card" onclick="navigateToSection('approvals')">
+                            <div class="quick-card-icon" style="background: #FDF1E6;">⏳</div>
+                            <div class="quick-card-text">
+                                <div class="quick-card-title">Review Pending</div>
+                                <div class="quick-card-desc">Approve or reject submissions</div>
+                            </div>
+                            <div class="quick-card-arrow">→</div>
+                        </button>
+                        
+                        <button class="quick-card" onclick="navigateToSection('records')">
+                            <div class="quick-card-icon" style="background: #EEF4F6;">📋</div>
+                            <div class="quick-card-text">
+                                <div class="quick-card-title">View All Records</div>
+                                <div class="quick-card-desc">Browse training history</div>
+                            </div>
+                            <div class="quick-card-arrow">→</div>
+                        </button>
+                        
+                        <button class="quick-card" onclick="navigateToSection('export')">
+                            <div class="quick-card-icon" style="background: #E6F4F4;">📥</div>
+                            <div class="quick-card-text">
+                                <div class="quick-card-title">Export Data</div>
+                                <div class="quick-card-desc">Download Excel reports</div>
+                            </div>
+                            <div class="quick-card-arrow">→</div>
+                        </button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- ===== APPROVALS SECTION ===== -->
+            <section id="section-approvals" class="dash-section hidden">
+                <h1 class="page-title">Pending Approvals</h1>
+                <p class="page-subtitle">Review and approve training records signed by supervisors.</p>
+                
+                <div class="filters-bar">
+                    <select id="filterPlant" class="form-select" style="width: 180px;">
+                        <option value="">All Plants</option>
+                        <option value="Plant-1">Plant-1</option>
+                        <option value="Plant-2">Plant-2</option>
+                        <option value="Plant-3">Plant-3</option>
+                        <option value="Plant-4">Plant-4</option>
+                        <option value="Plant-6">Plant-6</option>
+                    </select>
+                    <button class="btn btn-secondary" onclick="loadPendingApprovals()">
+                        🔄 Refresh
+                    </button>
+                </div>
+                
+                <div id="pendingList" class="pending-list">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⏳</div>
+                        <div class="empty-state-title">Loading…</div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- ===== RECORDS SECTION ===== -->
+            <section id="section-records" class="dash-section hidden">
+                <h1 class="page-title">All Training Records</h1>
+                <p class="page-subtitle">Complete history of all training submissions.</p>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <p class="text-muted text-center">📋 Coming soon in next update</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- ===== ANALYTICS SECTION ===== -->
+            <section id="section-analytics" class="dash-section hidden">
+                <h1 class="page-title">Analytics & Insights</h1>
+                <p class="page-subtitle">Deep insights into training performance.</p>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <p class="text-muted text-center">📈 Coming soon — Charts, heatmaps, and predictive insights</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- ===== EXPORT SECTION ===== -->
+            <section id="section-export" class="dash-section hidden">
+                <h1 class="page-title">Export Data</h1>
+                <p class="page-subtitle">Download training records in Excel format matching the original schema.</p>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <p class="text-muted text-center">📥 Coming soon in next update</p>
+                    </div>
+                </div>
+            </section>
+            
+        </main>
+    </div>
+    
+    <!-- Approval Modal -->
+    <div class="modal-overlay hidden" id="approvalModal">
+        <div class="modal" style="max-width: 640px;">
+            <div class="modal-icon" style="background: var(--alj-teal-soft); padding: var(--space-6);">
+                <h2 style="font-size: 1.2rem; color: var(--alj-dark-teal); font-weight: 700; text-align: center; margin: 0;">
+                    Review Training Record
+                </h2>
+            </div>
+            <div class="modal-body" style="text-align: left;">
+                <div id="approvalDetails" class="modal-details"></div>
+                
+                <div id="rejectionInput" class="hidden" style="margin-bottom: var(--space-4);">
+                    <label class="form-label">Rejection reason <span class="required">*</span></label>
+                    <textarea id="rejectReason" class="form-textarea" rows="3" placeholder="Explain why this record is being rejected..."></textarea>
+                </div>
+                
+                <div class="modal-actions" style="justify-content: space-between;">
+                    <button type="button" class="btn btn-secondary" id="approvalCancelBtn">Cancel</button>
+                    <div style="display: flex; gap: var(--space-3);">
+                        <button type="button" class="btn btn-secondary" id="approvalRejectBtn" style="border-color: #d32f2f; color: #d32f2f;">
+                            ✗ Reject
+                        </button>
+                        <button type="button" class="btn btn-primary" id="approvalApproveBtn" style="background: var(--alj-viridian);">
+                            ✓ Approve & Sign
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <script src="../js/config.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="js/admin-api.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
