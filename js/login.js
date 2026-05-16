@@ -101,15 +101,23 @@
         try {
             const employee = await API.verifyEmployee(parseInt(empId, 10));
             
-            if (employee) {
-                verifiedEmployee = employee;
-                showPreview(employee);
-            } else {
+            if (!employee) {
                 showError('Employee ID not found. Please check the number and try again.');
+                return;
             }
+            
+            // Check login permission (supervisors and managers only)
+            if (employee.can_login !== true) {
+                showError('Access restricted. Only supervisors and workshop managers can sign in. Contact your manager if you need access.');
+                verifiedEmployee = null;
+                return;
+            }
+            
+            verifiedEmployee = employee;
+            showPreview(employee);
         } catch (err) {
             console.error('Verification error:', err);
-            showError('Connection error. Please check your internet and try again.');
+            showError('Unable to connect to the system. Please check your internet and try again.');
         }
     }
     
