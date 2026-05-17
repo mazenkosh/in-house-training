@@ -346,7 +346,7 @@
 
         try {
             const offset = window.recordsPage * PAGE_SIZE;
-            const rows = await qry(tbl, `${pq}select=si,training_date,plant,line,emp_name,model,grade,process_name,trained_hours,training_result,approval_status&order=training_date.desc&limit=${PAGE_SIZE}&offset=${offset}`);
+            const rows = await qry(tbl, `${pq}select=si,training_date,plant,line,emp_name,model,grade,process_name,trained_hours,training_result${tbl==='training_records'?',approval_status':''}&order=training_date.desc&limit=${PAGE_SIZE}&offset=${offset}`);
 
             if (!rows.length) {
                 document.getElementById('rtw').innerHTML = `<div class="empty-state"><div class="empty-state-icon">📋</div><div class="empty-state-title">No records found</div></div>`;
