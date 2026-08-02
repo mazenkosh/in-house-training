@@ -315,10 +315,13 @@
     const PAGE_SIZE = 50;
 
     window.loadAllRecords = async function(reset=true) {
-        if (reset) window.recordsPage = 0;
-        const $s = document.getElementById('section-records');
-        const pf = plantFilter ? `plant=eq.${encodeURIComponent(plantFilter)}&` : '';
-
+       if (reset) window.recordsPage = 0;
+    const $s = document.getElementById('section-records');
+    const pf = plantFilter ? `plant=eq.${encodeURIComponent(plantFilter)}&` : '';
+    
+    // Save filter values BEFORE reset (fixes filter bug)
+    const savedTable = document.getElementById('frTable')?.value || 'historical_records';
+    const savedPlant = document.getElementById('frPlant')?.value || '';
         if (reset) {
             $s.innerHTML = `
                 <h1 class="page-title">All Training Records</h1>
@@ -338,8 +341,8 @@
                 <div id="rtw"></div>`;
         }
 
-        const tbl = document.getElementById('frTable')?.value || 'historical_records';
-        const ep = document.getElementById('frPlant')?.value;
+const tbl = savedTable;
+const ep = savedPlant;
         const pq = ep ? `plant=eq.${encodeURIComponent(ep)}&` : pf;
 
         document.getElementById('rtw').innerHTML = `<div class="empty-state"><div class="empty-state-icon"><span class="spinner spinner-lg"></span></div></div>`;
